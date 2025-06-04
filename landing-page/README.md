@@ -10,14 +10,15 @@ Deploying a static website using the Amazon S3 console
 Let’s use this new integration to host a personal website directly from my S3 bucket.
 
 To get started, I navigate to my bucket in the Amazon S3 console . Here’s the list of all the content in that S3 bucket:
-![Diagram] (/demos/02-S3.png)
+
+![Amplify Deployment](/demos/02-S3.png)
 
 To use the new integration with AWS Amplify Hosting, I navigate to the Properties section, then I scroll down until I find Static website hosting and select Create Amplify app.
-![AmplifyApp] (/demos/03-S3.png)
+![Amplify Deployment](/demos/03-S3.png)
 
 Then, it redirects me to the Amplify page and populates the details from my S3 bucket. Here, I configure my App name and the Branch name. Then, I select Save and deploy.
 
-![SaveDeploy] (/demos/04-Amplify-deployment.png)
+![SaveDeploy](/demos/04-Amplify-deployment.png)
 
 Within seconds, AWS Amplify has deployed my static website, and I can visit the site by selecting Visit deployed URL. If I make any subsequent changes in my S3 bucket for my static website, I need to redeploy my application in the Amplify console by selecting the Deploy updates button.
 
