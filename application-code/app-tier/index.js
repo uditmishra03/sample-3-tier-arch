@@ -3,10 +3,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const os = require('os');
-const fetch = require('node-fetch');
+
+// Use native fetch if available (Node.js 18+), otherwise use node-fetch
+let fetch;
+if (typeof global.fetch === 'function') {
+    fetch = global.fetch;
+} else {
+    fetch = require('node-fetch');
+}
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -15,22 +22,62 @@ app.use(cors());
 // ROUTES FOR OUR API
 // =======================================================
 
-//Health Checking
-app.get('/health',(req,res)=>{
-    res.json("This is the health check");
+//Health Checking with database connectivity verification
+app.get('/health', async (req, res) => {
+    try {
+        // Check database connectivity
+        await transactionService.checkDatabaseConnection();
+        res.json({
+            status: "healthy",
+            message: "Service is running and database connection is established",
+            timestamp: new Date().toISOString(),
+            hostname: os.hostname()
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: "unhealthy",
+            message: "Database connection failed",
+            error: err.message,
+            timestamp: new Date().toISOString(),
+            hostname: os.hostname()
+        });
+    }
 });
 
 // ADD TRANSACTION
-app.post('/transaction', (req,res)=>{
-    var response = "";
-    try{
-        console.log(req.body);
-        console.log(req.body.amount);
-        console.log(req.body.desc);
-        var success = transactionService.addTransaction(req.body.amount,req.body.desc);
-        if (success = 200) res.json({ message: 'added transaction successfully'});
-    }catch (err){
-        res.json({ message: 'something went wrong', error : err.message});
+app.post('/transaction', async (req, res) => {
+    try {
+        // Input validation
+        if (!req.body.amount || isNaN(parseFloat(req.body.amount))) {
+            return res.status(400).json({ message: 'Invalid amount value' });
+        }
+        
+        if (!req.body.desc || typeof req.body.desc !== 'string') {
+            return res.status(400).json({ message: 'Invalid description value' });
+        }
+        
+        // Log sanitized inputs
+        console.log('Adding transaction:', {
+            amount: parseFloat(req.body.amount),
+            description: req.body.desc
+        });
+        
+        // Fixed comparison operator (was using assignment = instead of comparison ==)
+        const success = await transactionService.addTransaction(req.body.amount, req.body.desc);
+        if (success == 200) {
+            res.status(201).json({ 
+                message: 'Transaction added successfully',
+                timestamp: new Date().toISOString()
+            });
+        } else {
+            res.status(500).json({ message: 'Failed to add transaction' });
+        }
+    } catch (err) {
+        console.error('Error in POST /transaction:', err);
+        res.status(500).json({ 
+            message: 'Something went wrong while processing your request', 
+            error: err.message 
+        });
     }
 });
 
