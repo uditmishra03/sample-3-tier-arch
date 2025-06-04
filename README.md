@@ -24,8 +24,9 @@ In this architecture, a public-facing Application Load Balancer forwards client 
 
 This project provides two implementation approaches:
 
-1. **Manual Setup**: Follow the step-by-step instructions in the original README to manually create and configure all resources.
+1. **Manual Setup**: Follow the step-by-step instructions in the [original walkthrough](MANUAL_SETUP.md) to manually create and configure all resources.
 2. **Infrastructure as Code**: Use the CloudFormation templates in the `/cloudformation` directory to automate the deployment.
+3. **AWS CLI Deployment**: Use the AWS CLI commands in the [AWS CLI Deployment Guide](AWS_CLI_DEPLOYMENT.md) for a scripted deployment.
 
 ## Key Components
 
@@ -35,10 +36,14 @@ This project provides two implementation approaches:
 - NAT Gateways for private subnet internet access
 - Route tables and security groups for network isolation and security
 
+![VPC](/demos/FillVPCSettings.png)
+
 ### Database Layer
 - Aurora MySQL cluster with multi-AZ deployment
 - Private subnet placement for enhanced security
 - Database subnet group for proper subnet association
+
+![Database Configuration](/demos/DBConfig1.png)
 
 ### Application Layer
 - Node.js application running on EC2 instances
@@ -46,11 +51,15 @@ This project provides two implementation approaches:
 - Internal Application Load Balancer for traffic distribution
 - Connection to Aurora MySQL database for data persistence
 
+![App Tier Configuration](/demos/ConfigureInstanceDetails.png)
+
 ### Web Layer
 - Nginx web server serving a React.js application
 - Auto Scaling Group for high availability and scalability
 - Public Application Load Balancer for internet traffic distribution
 - API proxying to the application layer
+
+![Web Tier](/demos/WebPage1.png)
 
 ## Security Enhancements
 
@@ -61,6 +70,8 @@ The project includes several security best practices:
 3. **SQL Injection Prevention**: Parameterized queries in the application code
 4. **Least Privilege Access**: IAM roles with minimal required permissions
 5. **HTTPS Support**: Configuration options for SSL/TLS
+
+![Security Groups](/demos/WebTierSG.png)
 
 ## Modernization Options
 
@@ -78,6 +89,9 @@ Choose your preferred implementation method:
 
 - For manual setup, follow the detailed instructions in the [original walkthrough](MANUAL_SETUP.md).
 - For automated deployment using CloudFormation, see the [CloudFormation README](cloudformation/README.md).
+- For AWS CLI deployment, follow the [AWS CLI Deployment Guide](AWS_CLI_DEPLOYMENT.md).
+
+![Final Architecture](/demos/FinalLBDNS.png)
 
 ## License
 
