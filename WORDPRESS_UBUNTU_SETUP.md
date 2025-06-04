@@ -39,8 +39,19 @@ sudo systemctl start mysql
 sudo mysql_secure_installation
 ```
 
-Follow the prompts to:
-- Set a root password
+**Note:** Ubuntu 24.04 uses `auth_socket` authentication by default, which means you won't be able to set a password during the secure installation process. To set a password for the root user, run:
+
+```bash
+# Log in to MySQL as root
+sudo mysql
+
+# Once in the MySQL prompt, run:
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_strong_password';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Then follow the prompts in `mysql_secure_installation` to:
 - Remove anonymous users
 - Disallow root login remotely
 - Remove test database
