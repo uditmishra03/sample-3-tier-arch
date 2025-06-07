@@ -1,4 +1,7 @@
 ## While Launching the ec2 instance, Pre-install aws cli in the instance.
+
+Here’s a simple, no-BS bash script that does exactly what you need on a Debian/Ubuntu-based EC2 instance:
+
 ```
 #!/bin/bash
 
